@@ -16,32 +16,35 @@ def merge(tiles):
     return tiles
 
 class Game(object):
-    def __init__(self):
-        self.board = [[None, None, None, None],
-                      [None, None, None, None],
-                      [None, None, None, None],
-                      [None, None, None, None]]
+    def __init__(self, board=None):
+        if board is None:
+            self.board = [[None, None, None, None],
+                          [None, None, None, None],
+                          [None, None, None, None],
+                          [None, None, None, None]]
+        else:
+            self.board = board
     
     def move_left(self):
         row_1 = merge(self.board[0])
         row_2 = merge(self.board[1])
         row_3 = merge(self.board[2])
         row_4 = merge(self.board[3])
-        self.board = [row_1, row_2, row_3, row_4]
+        return [row_1, row_2, row_3, row_4]
 
     def move_right(self):
         row_1 = merge(self.board[0][-1:])
         row_2 = merge(self.board[1[-1:]])
         row_3 = merge(self.board[2][-1:])
         row_4 = merge(self.board[3][-1:])
-        self.board = [row_1[-1:], row_2[-1:], row_3[-1:], row_4[-1:]]
+        return [row_1[-1:], row_2[-1:], row_3[-1:], row_4[-1:]]
 
     def move_up(self):
         row_1 = merge([self.board[0][0], self.board[1][0], self.board[2][0], self.board[3][0]])
         row_2 = merge([self.board[0][1], self.board[1][1], self.board[2][1], self.board[3][1]])
         row_3 = merge([self.board[0][2], self.board[1][2], self.board[2][2], self.board[3][2]])
         row_4 = merge([self.board[0][3], self.board[1][3], self.board[2][3], self.board[3][3]])
-        self.board = [[row_1[0], row_2[0], row_3[0], row_4[0]],
+        return [[row_1[0], row_2[0], row_3[0], row_4[0]],
                       [row_1[1], row_2[1], row_3[1], row_4[1]],
                       [row_1[2], row_2[2], row_3[2], row_4[2]],
                       [row_1[3], row_2[3], row_3[3], row_4[3]]]
@@ -51,7 +54,7 @@ class Game(object):
         row_2 = merge([self.board[0][1], self.board[1][1], self.board[2][1], self.board[3][1]][-1:])
         row_3 = merge([self.board[0][2], self.board[1][2], self.board[2][2], self.board[3][2]][-1:])
         row_4 = merge([self.board[0][3], self.board[1][3], self.board[2][3], self.board[3][3]][-1:])
-        self.board = [[row_1[0], row_2[0], row_3[0], row_4[0]][-1:],
+        return [[row_1[0], row_2[0], row_3[0], row_4[0]][-1:],
                       [row_1[1], row_2[1], row_3[1], row_4[1]][-1:],
                       [row_1[2], row_2[2], row_3[2], row_4[2]][-1:],
                       [row_1[3], row_2[3], row_3[3], row_4[3]][-1:]]
