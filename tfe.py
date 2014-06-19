@@ -2,16 +2,18 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from random import randint
 from time import sleep
+import brain
+import game
 
 drv = webdriver.Firefox()
 drv.get('http://gabrielecirulli.github.io/2048/')
 container = drv.find_element_by_class_name('tile-container')
 retry = drv.find_element_by_class_name('retry-button')
 
-board = [[0, 0, 0, 0],
-         [0, 0, 0, 0],
-         [0, 0, 0, 0],
-         [0, 0, 0, 0]]
+board = [[None, None, None, None],
+         [None, None, None, None],
+         [None, None, None, None],
+         [None, None, None, None]]
 
 def move_up():
     container.send_keys(Keys.UP)
@@ -27,10 +29,10 @@ def move_right():
 
 def zero_board():
     global board
-    board = [[0, 0, 0, 0],
-             [0, 0, 0, 0],
-             [0, 0, 0, 0],
-             [0, 0, 0, 0]]
+    board = [[None, None, None, None],
+             [None, None, None, None],
+             [None, None, None, None],
+             [None, None, None, None]]
 
 def update_board():
     global board
@@ -42,16 +44,22 @@ def update_board():
         value = tile[1].split('-')[1]
         pos = tile[2].split('-')[-2:]
         board[int(pos[1]) - 1][int(pos[0]) - 1] = int(value)
-    
+
 
 def pick_move():
-    moves = (move_up, move_down, move_left, move_right)
-    return moves[max([randint(0, 3) for _ in range(4)])]
+    global board
+    g = game.Game(board)
+    predictions = brain.predict_next_board(g)
+    scores = []
+    for p in predictions[1:]:
+        print(p, len(p))
+        score = brain.weight_boards(predictions[0], p)
+        scores.append(score)
+    return brain.choose(scores)
 
 while not retry.is_displayed():
-    m = randint(0, 3)
-    pick_move()()
     update_board()
+    pick_move()()
 
 sleep(2)
 update_board()
